@@ -4,50 +4,54 @@
  * @flow
  */
 
+'use strict';
+
 import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  Navigator
 } from 'react-native';
 
-export default class gliaMh extends Component {
+import GliaLogin from './app/login';
+import SurveyOnBoard from './app/survey_onboard.js';
+
+class Glia_App extends Component {
   render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
-    );
+    return(
+      <Navigator
+      initialRoute={{name:"login"}}
+        renderScene={(route,navigator) => {
+          if(route.name === "login") {
+           return <GliaLogin navigator={this.props.navigator} />
+          }
+          else {
+            return <SurveyOnBoard navigator={navigator} />
+          }
+        }
+
+          
+        }
+        onForward={() => {
+            const nextIndex = route.index+1;
+            navigator.push({
+              title: 'Scene' + nextIndex,
+              index: nextIndex,
+              });
+            }}
+        onBack={() => {
+          if(route.index > 0) {
+            navigator.pop();
+          }
+        }}
+      />
+    )          
   }
 }
+    
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
 
-AppRegistry.registerComponent('gliaMh', () => gliaMh);
+
+AppRegistry.registerComponent('gliaMh', () => Glia_App);
