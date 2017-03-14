@@ -2,6 +2,8 @@
 import React, { Component, } from 'react';
 import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight } from 'react-native';
 
+import {Actions,ActionConst} from 'react-native-router-flux';
+
 export default class GliaLogin extends Component {
 
   render() {
@@ -10,19 +12,13 @@ export default class GliaLogin extends Component {
         <Image source={require('./images/entirelogog.png')} style={styles.image}/>
         <View style={styles.background}>
         </View>
-        <TouchableHighlight onPress={this._onLoginPressed} style={styles.login_button}>
+        <TouchableHighlight onPress={Actions.initialSurvey} style={styles.login_button}>
         <View style={styles.login_button}>
           <Text style={styles.Login_test}>Log In</Text>
         </View>
           </TouchableHighlight>
       </View>
-
     )
-  }
-  _onLoginPressed() {
-    this.props.navigator.push({
-      name:"survey_onboard",
-    })
   }
 }
 
@@ -47,7 +43,7 @@ const styles = StyleSheet.create( {
   },
   image: {
     marginTop: 200,
-    height: 60,
-    width: 200,
+    height: 80,
+    width: 220,
   }
 })

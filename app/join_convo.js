@@ -1,35 +1,26 @@
-
-
-
 import React, { Component, } from 'react';
 import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpacity, ScrollView} from 'react-native';
-
 import {Actions} from 'react-native-router-flux';
 
 
-export default class SurveyOnBoard extends Component {
+
+
+export default class JoinConvo extends Component {
 
     render() {
       return (
         <View style={styles.background}>
           <Image style={styles.top_image} source={require('./images/entirelogog.png')}/>
-          <Text style={styles.base_text}> Let's get started! </Text>
-          <Text style={[styles.base_text, styles.sub_text]}> Please take this survey so we can better serve you! </Text>
           <TouchableOpacity
             activeOpacity={0.7}
+            onPress={Actions.conversation}
             >
-
             <View style={styles.outer_circle}>
               <View style={styles.inner_circle}>
-                <Text style={styles.circle_text}> Take Survey </Text>
+                <Text style={styles.circle_text}> Join Conversation </Text>
               </View>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.skip_button}
-            onPress={Actions.joinConvo}>
-            <Text style={[styles.base_text, styles.sub_text, styles.marginer]}> Skip Survey </Text>
-          </TouchableOpacity>
-
         </View>
       )
     }
@@ -42,12 +33,9 @@ background : {
     backgroundColor: "#2dd1ae",
     alignItems: 'center',
   },
-  marginer: {
-    marginTop: 40,
-  },
   top_image: {
-    height: 50,
-    width: 150,
+    height: 40,
+    width: 120,
     marginTop: 25,
   },
   base_text: {
@@ -64,7 +52,7 @@ background : {
     fontSize: 20,
   },
   outer_circle: {
-    marginTop: 10,
+    marginTop: 100,
     backgroundColor: "#76f3e8",
     borderRadius: 200/2,
     width: 200,
