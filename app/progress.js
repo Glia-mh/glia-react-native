@@ -1,35 +1,105 @@
 import React, { Component, } from 'react';
-import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpacity} from 'react-native';
+import { Animated, AppRegistry, ImageStore, ImageEditor, View,StyleSheet,Image,TouchableHighlight,TouchableOpacity} from 'react-native';
 
 import {Actions,ActionConst} from 'react-native-router-flux';
+import {Header, Left, Right, Body, Icon, Button, Title, Text, connectStyle, StyleProvider, Content, H2} from 'native-base';
+import PercentageCircle from 'react-native-percentage-circle';
+import Animation from 'lottie-react-native';
+import ProgressJson from '../gliaprogress.json'
+import getTheme from '../native-base-theme/components';
+import commonColor from '../native-base-theme/variables/commonColor';
 
+
+
+
+
+
+//TODO: Add back Lottie for progress instead of static image and replace static image with indicator with background
+//TODO: Check if PercentageCircle is upgraded and upgrade library accordingly as PercentageCircle does not work for >50% 
 
 export default class About extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+     progress: new Animated.Value(0.5),
+   };
+//const styles = this.props.style;
+  }
+
+  componentDidMount() {
+
+    }
 
   render() {
+
+    const animationConst = (
+
+        <Animation
+        source={ProgressJson}
+        progress={this.state.progress}
+        style = {styles.image_css_indicator}
+        />
+
+    );
+    console.log(ProgressJson);
     return (
+
     <View style={styles.bg}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={Actions.pop}
-          >
-          <Image source={require('./images/close.png')} style={styles.back_icon}
-          />
-        </TouchableOpacity>
-        <Text style={styles.top_title}> </Text>
+      <StyleProvider style={getTheme()}>
+      <Header>
+                          <Left>
+                              <Button onPress={Actions.pop} transparent>
+
+
+                                  <Icon name='arrow-back' />
+                                  <Text> Back </Text>
+
+
+                              </Button>
+
+                          </Left>
+                          <Body>
+
+                          </Body>
+                          <Right />
+                      </Header>
+
+    </StyleProvider>
+
+      <View style={styles.progress_text_container}>
+
+      <StyleProvider style={getTheme(commonColor)}>
+
+        <H2> 2 Weeks Remaining </H2>
+        </StyleProvider>
       </View>
-      <Text style={[styles.progress_text, styles.progress_top]}> 25% </Text>
-      <View style={styles.img_container}>
-      <Image style={styles.outer_circle} source={require('./images/leaf.png')}></Image>
+      <View style={styles.progress_container}>
+
+          <PercentageCircle  radius={112} percent={75} color={"#50E3C2"}>
+          <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
+            <Image style={styles.image_css} source={require('./images/leaf_with_indicator.png')}/>
+          </View>
+          <View style ={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
+
+          </View>
+
+
+          </PercentageCircle>
+
+      </View>
+
+
+
     </View>
-      <Text style={styles.progress_text}> 4 Weeks Remaining </Text>
 
-
-    </View>
-
-    )
+  );
+    this.setState({ progress: new Animated.Value(0.3)});
   }
 }
+
+
+
+
 
 const styles = StyleSheet.create({
   bg : {
@@ -37,27 +107,40 @@ const styles = StyleSheet.create({
   },
 
   progress_text :{
-    marginTop: 30,
-    marginBottom: 30,
-    color: "#2dd1ae",
-    textAlign: 'center',
-    fontFamily: "AvenirNext-Regular",
-    fontSize: 25,
+    fontWeight: "100",
+    fontSize: 24,
+    color: "#50E3C2",
   },
-  progress_top: {
-   marginTop: 90,
+  progress_container: {
+    flex: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: "#FF0000",
   },
   img_container : {
     alignItems: 'center',
+    borderRadius: 125,
+    borderWidth: 1,
+    borderColor: "#9B9B9B",
+    width:225,
+    height: 225,
+    padding:50,
+    marginRight: 2,
+    marginTop: 2,
   },
-  outer_circle: {
+  image_css_indicator: {
+    width:200,
+    height:200,
+    transform: [{scale: 3.2/8.0}],
+    maxHeight: 200,
+    maxWidth: 200,
+
+  },
+  image_css: {
     resizeMode: 'contain',
-    width: 200,
-    height: 200,
-    alignItems: 'center',
-    tintColor: "#808080",
-    opacity: 0.7,
-    marginRight: 15,
+    width: 150,
+    height: 150,
+
   },
   descriptionView: {
     alignItems: 'center',
@@ -96,5 +179,11 @@ const styles = StyleSheet.create({
     marginRight: 40,
 
   },
+  progress_text_container : {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 
-})
+});
+//export default connectStyle('NativeBase.About', styles)(CustomComponent);
