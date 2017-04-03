@@ -1,40 +1,82 @@
 
 import React, { Component, } from 'react';
-import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpacity} from 'react-native';
+import { ScrollView, AppRegistry, View,StyleSheet,Image,TouchableHighlight,TouchableOpacity} from 'react-native';
 
 import {Actions,ActionConst} from 'react-native-router-flux';
-
-export default class About extends Component {
+import {Header, Left, Right, Body, Icon, Button, Title, Text, connectStyle, StyleProvider, Content, H2} from 'native-base';
+import getTheme from '../native-base-theme/components';
+class About extends Component {
 
   render() {
+    const styles = this.props.style;
     return (
-    <View style={styles.bg}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={Actions.pop}
-          >
-          <Image source={require('./images/close.png')} style={styles.back_icon}
-          />
-        </TouchableOpacity>
-        <Text style={styles.top_title}> Dr. Anderson </Text>
-      </View>
+
+      //header
+      <View style={styles.bg}>
+      <StyleProvider style={getTheme()}>
+      <Header>
+                          <Left>
+                              <Button transparent onPress={Actions.pop}>
+
+
+                                  <Icon name='arrow-back' />
+                                  <Text> Back </Text>
+
+
+                              </Button>
+
+                          </Left>
+                          <Body>
+
+                          </Body>
+                          <Right />
+                      </Header>
+
+    </StyleProvider>
+
+
+
+      <ScrollView style={styles.scroll_view_container}>
+      <View style={styles.container_view}>
+      <View style={styles.content_container_view}>
       <View style={styles.img_container}>
-        <View style={styles.outer_circle}></View>
+      <View style={styles.outer_circle}></View>
       </View>
+      <Text style={styles.title_name_text}> Lorem Ipsum </Text>
       <View style={styles.descriptionView}>
-          <Text style={styles.physician_descrip}>
-            Te legendos quaerendum ius. No eam rebum voluptatum, nec eu dolor blandit volutpat, facer etiam inciderint ei cum. Has te elit laudem, ad aeque ancillae has. Sonet soluta eam ei, incorrupte temporibus ad has. His sale soluta gloriatur ea, id populo repudiare quo, te graeco ponderum mediocritatem est. At eum nulla dolores. Eos et autem omnesque, mel quis malis in.
+      <Text style={styles.physician_descrip}>
+      Te legendos quaerendum ius. No eam rebum voluptatum, nec eu dolor blandit volutpat, facer etiam inciderint ei cum. Has te elit laudem, ad aeque ancillae has. Sonet soluta eam ei, incorrupte temporibus ad has. His sale soluta gloriatur ea, id populo repudiare quo, te graeco ponderum mediocritatem est. At eum nulla dolores. Eos et autem omnesque, mel quis malis in.
 
-           </Text>
+      </Text>
       </View>
+      </View>
+      </View>
+      </ScrollView>
 
-    </View>
+      </View>
 
     )
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
+  content_container_view : {
+    width: 200,
+    marginBottom: 50
+  },
+  title_name_text : {
+    /* Pratik Doshi: */
+    fontWeight: "300",
+    fontSize: 20,
+    color: "#B9B9B9",
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  container_view: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
   bg : {
     flex: 1,
   },
@@ -45,28 +87,28 @@ const styles = StyleSheet.create({
     marginTop: 50,
     backgroundColor: "#cfcfcf",
     borderRadius: 200/2,
-    width: 200,
-    height: 200,
+    width: 125,
+    height: 125,
     opacity: 0.7,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   descriptionView: {
     alignItems: 'center',
 
   },
   physician_descrip: {
-    color: "#808080",
-    textAlign: 'center',
-    fontFamily: "AvenirNext-Regular",
+
+    fontWeight: "200",
     fontSize: 15,
+    color: "#B9B9B9",
     marginLeft: 20,
     marginRight: 20,
+    textAlign: 'center',
   },
   header : {
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     height: 65,
     backgroundColor:"#f9fafb",
     flexDirection: 'row',
@@ -91,4 +133,5 @@ const styles = StyleSheet.create({
 
   },
 
-})
+};
+export default connectStyle('About', styles)(About);

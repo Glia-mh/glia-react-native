@@ -40,7 +40,7 @@ export default class Conversation extends Component {
       <View style={styles.bg}>
         <View style={styles.header}>
           <TouchableOpacity
-            onPress={Actions.pop}
+            onPress={Actions.joinConvo}
             >
             <Image source={require('./images/close.png')} style={styles.back_icon}
             />
