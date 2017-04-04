@@ -13,6 +13,7 @@ class SurveyOnBoard extends Component {
       const styles = this.props.style;
       return (
         <View style={styles.background}>
+
           <View style= {styles.logoheader}>
             <Image style={styles.top_image} source={require('./images/leaf.png')}/>
           </View>
@@ -23,11 +24,12 @@ class SurveyOnBoard extends Component {
           </View>
           <View style = {styles.blank_margin_two}/>
           <View style = {styles.start_survey_container}>
-            <TouchableOpacity activeOpacity={0.7}>
+            <TouchableOpacity activeOpacity={0.7} onPress={Actions.survey}>
               <View style={styles.outer_circle}>
                 <View style={styles.inner_circle}>
                   <Text style={styles.circle_text}> Take Survey </Text>
                 </View>
+
               </View>
             </TouchableOpacity>
           </View>

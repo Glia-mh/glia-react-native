@@ -23,6 +23,13 @@ export default class JoinConvo extends Component {
               </View>
             </View>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.help_cont}
+            onPress={Actions.help}
+            >
+            <Text style={styles.help_text}> Help and Information </Text>
+          </TouchableOpacity>
         </View>
       )
     }
@@ -30,6 +37,9 @@ export default class JoinConvo extends Component {
 
 
 const styles = StyleSheet.create({
+  help_cont : {
+    marginTop: 100,
+  },
 background : {
     flex: 1,
     backgroundColor: "#2dd1ae",
@@ -84,5 +94,11 @@ background : {
   },
   skip_button : {
     marginTop: 30,
-  }
+  },
+  help_text : {
+    color: "#FFFFFF",
+    textAlign: 'center',
+    fontFamily: "AvenirNext-Regular",
+    fontSize: 20,
+  },
 })
