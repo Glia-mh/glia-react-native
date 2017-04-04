@@ -20,7 +20,7 @@ export default class GliaApp extends Component {
           <Scene key="initialSurvey" component={SurveyOnBoard} title="SurveryOnboard" direction='vertical'/>
           <Scene key="joinConvo" component={JoinConvo} direction='fade' title="joinConvo" />
           <Scene key="joinConvoTwo" component={JoinConvo} title="joinConvoTwo" />
-          <Scene key="conversation"  component={Conversation} direction='vertical' title="conversation" />
+          <Scene key="conversation"  component={Conversation} panHandlers = {null} direction='vertical' title="conversation" />
           <Scene key="about" component={About}  title="About"/>
           <Scene key="progress"     component={Progress} title="progress"/>
         </Scene>
