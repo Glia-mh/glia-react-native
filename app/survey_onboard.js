@@ -17,6 +17,7 @@ export default class SurveyOnBoard extends Component {
           <Text style={[styles.base_text, styles.sub_text]}> Please take this survey so we can better serve you! </Text>
           <TouchableOpacity
             activeOpacity={0.7}
+            onPress={Actions.survey}
             >
 
             <View style={styles.outer_circle}>

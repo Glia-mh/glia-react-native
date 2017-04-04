@@ -9,6 +9,8 @@ import JoinConvo from './join_convo.js';
 import Conversation from './conversation.js';
 import About from './about.js';
 import Progress from './progress.js';
+import Help from './help.js';
+import Survey from './survey.js';
 
 export default class GliaApp extends Component {
 
@@ -22,6 +24,8 @@ export default class GliaApp extends Component {
           <Scene key="conversation" component={Conversation} title="conversation" />
           <Scene key="about" component={About} title="About"/>
           <Scene key="progress" component={Progress} title="progress"/>
+          <Scene key="help" component={Help} title="Help"/>
+          <Scene key="survey" component={Survey} title="Survey"/>
         </Scene>
       </Router>
     )
