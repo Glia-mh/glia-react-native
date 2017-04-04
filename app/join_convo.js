@@ -10,7 +10,9 @@ export default class JoinConvo extends Component {
     render() {
       return (
         <View style={styles.background}>
-          <Image style={styles.top_image} source={require('./images/entirelogog.png')}/>
+        <View style= {styles.logoheader}>
+          <Image style={styles.top_image} source={require('./images/leaf.png')}/>
+        </View>
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={Actions.conversation}
@@ -44,9 +46,10 @@ background : {
     alignItems: 'center',
   },
   top_image: {
-    height: 40,
-    width: 120,
-    marginTop: 25,
+    height: 25,
+    width: 25,
+    resizeMode: 'contain',
+    flex: 1,
   },
   base_text: {
     marginTop: 80,
@@ -83,6 +86,11 @@ background : {
     textAlign: 'center',
     fontFamily: "AvenirNext-Regular",
     fontSize: 20,
+  },
+  logoheader : {
+    height: 100,
+    alignItems : 'center',
+    justifyContent: 'center',
   },
   skip_button : {
     marginTop: 30,

@@ -1,12 +1,27 @@
 
 import React, { Component, } from 'react';
-import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpacity, ScrollView} from 'react-native';
+import { AppRegistry, Text,View,StyleSheet,Image, TouchableOpacity} from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
 import { GiftedChat,Bubble } from 'react-native-gifted-chat';
 
 import SendBird from 'sendbird';
 var sb = null;
+
+
+//Later TODOs
+//TODO: Change to Layer SDK
+//TODO: Use platform API for more secure authentication
+//TODO: Disconnect when you click X on conversation
+//TODO: change open channel to private channel
+//TODO: add getChannel with URL instead of indentifier for disconnecting from app
+
+
+//Current TODOs
+//TODO: Randomly generated Color + Tree names instead of Sam's name
+//TODO: initial is conversation.js once you have completed the initial survey
+//TODO: typing indicator
+//instead of login
 
 
 export default class Conversation extends Component {
@@ -25,21 +40,25 @@ export default class Conversation extends Component {
 
     //Do things with channels
 
+
   }
   componentWillMount() {
     var _SELF = this;
     sb = new SendBird({
       appId: "A7A2672C-AD11-11E4-8DAA-0A18B21C2D82",
     })
-    //Connecting Sendbird
-    var date = new Date();
-    sb.connect(date.toString(),(user,error) => {
+
+
+    sb.connect("orange_fern_dtpvbn",(user,error) => {
       if(error) {
         console.log(error);
       } else {
         //Do nothing with user obj
+        sb.updateCurrentUserInfo("Silver Maple", "https://res.cloudinary.com/giftapp/image/upload/v1491292503/orange_fern_dtpvbn.png", function(response, error) {
+          console.log(error);
+        });
 
-        sb.OpenChannel.getChannel('glia_test', function (channel, error) {
+        sb.OpenChannel.getChannel('glia_demo', function (channel, error) {
           if (error) {
             console.error(error);
             return;
@@ -63,11 +82,16 @@ export default class Conversation extends Component {
           ChannelHandler.onMessageReceived = function(channel, message){
             console.log(message);
             var messageList = [];
+
             messageList.push({
               _id: message.messageId,
               text: message.message,
               createdAt: message.createdAt,
-              user : message.sender,
+              user : {
+                _id: messageList[i].sender.userId,
+                name: messageList[i].sender.nickname,
+                avatar: messageList[i].sender.profileUrl,
+              },
             })
             var _newMessageList = messageList.concat(_SELF.state.messages);
             _SELF.setState({
@@ -84,16 +108,23 @@ export default class Conversation extends Component {
               console.error(error);
               return;
             }
-            //console.log(messageList);
+            console.log(messageList);
             var messages = _SELF.state.messages.slice();
+
             for(var i = 0 ; i < messageList.length; i++) {
               messages.push({
                 _id: messageList[i].messageId,
                 text: messageList[i].message,
                 createdAt: messageList[i].createdAt,
-                user : messageList[i].sender,
+                user : {
+                  _id: messageList[i].sender.userId,
+                  name: messageList[i].sender.nickname,
+                  avatar: messageList[i].sender.profileUrl,
+                },
+
               })
             }
+
             _SELF.setState({
               messages : messages,
             })
@@ -125,7 +156,7 @@ export default class Conversation extends Component {
       <View style={styles.bg}>
         <View style={styles.header}>
           <TouchableOpacity
-            onPress={Actions.pop}
+            onPress={Actions.joinConvo}
             >
             <Image source={require('./images/close.png')} style={styles.back_icon}
             />
@@ -145,16 +176,20 @@ export default class Conversation extends Component {
             />
           </TouchableOpacity>
         </View>
+
       <GiftedChat
+
         renderBubble={this.renderBubble.bind(this)}
         messages={this.state.messages}
         onSend={this.onSend}
         user={{
-          _id: 1,
+          _id: "orange_fern_dtpvbn",
         }}
+
+
         styles={{
           bubbleRight: {
-            backgroundColor: '#FFFFFF',
+            backgroundColor: '#2dd1ae',
           }
         }}
       >
@@ -213,6 +248,9 @@ const styles = StyleSheet.create({
     tintColor: "#2dd1ae",
     marginTop: 10,
     marginRight: 10,
-  }
+  },
+  marginTopMargin: {
+    marginTop: 10,
+  },
 
 })
