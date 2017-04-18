@@ -2,8 +2,18 @@ import React, { Component, } from 'react';
 import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpacity, ScrollView} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 
+import * as firebase from 'firebase';
 
 
+var config = {
+   apiKey: "AIzaSyCj_OQ9YvnLxWUWmVLI7OhIGDEwCgKwYK0",
+   authDomain: "glia-backend.firebaseapp.com",
+   databaseURL: "https://glia-backend.firebaseio.com",
+   projectId: "glia-backend",
+   storageBucket: "glia-backend.appspot.com",
+   messagingSenderId: "766206247203"
+ };
+ firebase.initializeApp(config);
 
 export default class JoinConvo extends Component {
 

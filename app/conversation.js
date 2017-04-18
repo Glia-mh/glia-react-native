@@ -5,119 +5,94 @@ import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpa
 import { Actions } from 'react-native-router-flux';
 import { GiftedChat,Bubble } from 'react-native-gifted-chat';
 
-import SendBird from 'sendbird';
-var sb = null;
+
+import * as firebase from "firebase";
+
 
 
 export default class Conversation extends Component {
   constructor(props) {
     super(props);
+    var date = new Date();
     this.state = {
       messages: [],
-      channel: null,
-      isConnected: false,
-      chanSize: 0,
       channelTitle: "",
+      convID: 1,
+      numUsers: 0,
+      userID: date.toString(),
       };
     this.onSend = this.onSend.bind(this);
-
-
-
+    
+    // Set up firebase 
     //Do things with channels
-
   }
   componentWillMount() {
-    var _SELF = this;
-    sb = new SendBird({
-      appId: "A7A2672C-AD11-11E4-8DAA-0A18B21C2D82",
+    /* ---- get valid convID ---- */
+
+    var convoRef = firebase.database().ref('/userCount');
+    convoRef.once('value', (data) => {
+      console.log(data.val());
+     this.setState({ 
+       convID: Math.floor(data.val() / 5) + 1,
+       numUsers: data.val(),
+     });
     })
-    //Connecting Sendbird
-    var date = new Date();
-    sb.connect(date.toString(),(user,error) => {
-      if(error) {
-        console.log(error);
-      } else {
-        //Do nothing with user obj
+    console.log("Here we are: " );
+    console.log(this.state.numUsers);
+   // convoRef.set(this.state.numUsers + 1)
 
-        sb.OpenChannel.getChannel('glia_test', function (channel, error) {
-          if (error) {
-            console.error(error);
-            return;
-          }
-          _SELF.setState({
-            chanSize: channel.participant_count,
-            channelTitle: channel.name,
-          })
 
-          channel.enter(function(response, error){
-          if (error) {
-            console.error(error);
-            return;
-          }
-          //Set up channel listener
-          _SELF.setState({
-            channel: channel,
-          })
-          var ChannelHandler = new sb.ChannelHandler();
-
-          ChannelHandler.onMessageReceived = function(channel, message){
-            console.log(message);
-            var messageList = [];
-            messageList.push({
-              _id: message.messageId,
-              text: message.message,
-              createdAt: message.createdAt,
-              user : message.sender,
-            })
-            var _newMessageList = messageList.concat(_SELF.state.messages);
-            _SELF.setState({
-              messages : _newMessageList
-            })
-            console.log(_SELF.state.messages);
-
-          };
-          sb.addChannelHandler("ChannelHandler", ChannelHandler);
-
-          var messageListQuery = channel.createPreviousMessageListQuery();
-          messageListQuery.load(15, true, function(messageList, error){
-            if (error) {
-              console.error(error);
-              return;
-            }
-            //console.log(messageList);
-            var messages = _SELF.state.messages.slice();
-            for(var i = 0 ; i < messageList.length; i++) {
-              messages.push({
-                _id: messageList[i].messageId,
-                text: messageList[i].message,
-                createdAt: messageList[i].createdAt,
-                user : messageList[i].sender,
-              })
-            }
-            _SELF.setState({
-              messages : messages,
-            })
-            });
-          });
-        });
-      }
-    }) //Done with Connection block
-  }
-  onSend(messages = []) {
-
-    for(var i = 0; i < messages.length; i++) {
-      this.state.channel.sendUserMessage(messages[i].text, '', function(message, error) {
-      if (error) {
-        console.log(error);
-        return;
-        }
+     var titleRef = firebase.database().ref('/conversation ' + this.state.convID + '/title');
+    titleRef.once('value', (data) => {
+      this.setState({
+        channelTitle : data.val(),
       })
-    }
-    this.setState((previousState) => {
-      return {
-        messages: GiftedChat.append(previousState.messages, messages),
-      };
+    })
+    var messRef = firebase.database().ref('/conversation ' + this.state.convID + '/messages/')
+    messRef.on('child_added', (data) => {
+      console.log(data.val());
+      console.log(data.key);
+      var messArr = this.state.messages.slice();
+      var newMessage = {
+        user : {
+          _id : data.val().user,
+          avatar : "https://www.timeshighereducation.com/sites/default/files/byline_photos/default-avatar.png",
+        },
+        text : data.val().text,
+        _id : data.key,
+        createdAt: new Date(),
+       
+      }
+      messArr.unshift(newMessage);
+      
+      this.setState({ 
+        messages: messArr, 
+        
+      })
+
     });
+  }
+  componentDidMount() {
+     var convoRef = firebase.database().ref('/userCount');
+     convoRef.set(this.state.numUsers + 1);
+  }
+
+  componentWillUnmount() {
+    console.log(this.state.numUsers);
+     var convoRef = firebase.database().ref('/userCount');
+     convoRef.set(this.state.numUsers - 1);
+  }
+
+  onSend(messages = []) {
+    for(var i = 0; i < messages.length; i++) {
+       var newMessage = firebase.database().ref('/conversation ' + this.state.convID + '/messages/').push();
+       console.log(this.state.userID);
+       newMessage.set({ 
+         text: messages[i].text,
+         user: this.state.userID,
+       })
+    }
+   
   }
 
   render() {
@@ -150,7 +125,7 @@ export default class Conversation extends Component {
         messages={this.state.messages}
         onSend={this.onSend}
         user={{
-          _id: 1,
+          _id: this.state.userID,
         }}
         styles={{
           bubbleRight: {

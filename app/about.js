@@ -4,7 +4,35 @@ import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpa
 
 import {Actions,ActionConst} from 'react-native-router-flux';
 
+import * as firebase from 'firebase';
+
 export default class About extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      bio : "",
+      imageURL: "http://starshiptroopersrp.net/wiki/images/person_placeholder.png",
+      name : "",
+      convID: 1,
+    }
+    //Firebase things 
+    var bioRef = firebase.database().ref('/conversation ' + this.state.convID);
+
+    bioRef.once('value', (data) => {
+      console.log("HERES THE DATA: " );
+      console.log(data.val());
+      this.setState({
+        name : data.val().counselorName,
+        bio : data.val().counselorBio,
+        imageURL: data.val().counselorImage,
+      })
+      console.log(this.state.bio);
+      console.log(this.state.name);
+    });
+
+  }
 
   render() {
     return (
@@ -16,15 +44,14 @@ export default class About extends Component {
           <Image source={require('./images/close.png')} style={styles.back_icon}
           />
         </TouchableOpacity>
-        <Text style={styles.top_title}> Dr. Anderson </Text>
+        <Text style={styles.top_title}> {this.state.name} </Text>
       </View>
       <View style={styles.img_container}>
-        <View style={styles.outer_circle}></View>
+       <Image source={{uri : this.state.imageURL}} style={styles.outer_circle} />
       </View>
       <View style={styles.descriptionView}>
           <Text style={styles.physician_descrip}>
-            Te legendos quaerendum ius. No eam rebum voluptatum, nec eu dolor blandit volutpat, facer etiam inciderint ei cum. Has te elit laudem, ad aeque ancillae has. Sonet soluta eam ei, incorrupte temporibus ad has. His sale soluta gloriatur ea, id populo repudiare quo, te graeco ponderum mediocritatem est. At eum nulla dolores. Eos et autem omnesque, mel quis malis in.
-
+            {this.state.bio}
            </Text>
       </View>
 
@@ -43,7 +70,7 @@ const styles = StyleSheet.create({
   },
   outer_circle: {
     marginTop: 50,
-    backgroundColor: "#cfcfcf",
+    backgroundColor: "#FFFFFF",
     borderRadius: 200/2,
     width: 200,
     height: 200,
