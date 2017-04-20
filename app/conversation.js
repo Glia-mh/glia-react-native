@@ -11,7 +11,9 @@ import * as firebase from "firebase";
 
 
 export default class Conversation extends Component {
+  
   constructor(props) {
+    console.log("Constructor called!");
     super(props);
     var date = new Date();
     this.state = {
@@ -19,39 +21,42 @@ export default class Conversation extends Component {
       channelTitle: "",
       convID: 1,
       numUsers: 0,
+      numConvos: 1,
       userID: date.toString(),
-      };
-    this.onSend = this.onSend.bind(this);
-    
-    // Set up firebase 
-    //Do things with channels
+    };
+    console.log(this.state.messages);
+   this.onSend = this.onSend.bind(this);
+
   }
   componentWillMount() {
     /* ---- get valid convID ---- */
+    var numConvosRef = firebase.database().ref('/numConvos');
+    numConvosRef.once('value',(data) => {
+      this.setState({
+        numConvos: data.val(),
+      })
+    });
+  
+    var userCountRef = firebase.database().ref('/userCount');
+    userCountRef.transaction((userCount) => {
+      this.setState({
+        numUsers: (userCount || 0) + 1,
+      })
+      return (userCount || 0) + 1;
+    });
 
-    var convoRef = firebase.database().ref('/userCount');
-    convoRef.once('value', (data) => {
-      console.log(data.val());
-     this.setState({ 
-       convID: Math.floor(data.val() / 5) + 1,
-       numUsers: data.val(),
-     });
-    })
-    console.log("Here we are: " );
-    console.log(this.state.numUsers);
-   // convoRef.set(this.state.numUsers + 1)
-
+    
 
      var titleRef = firebase.database().ref('/conversation ' + this.state.convID + '/title');
     titleRef.once('value', (data) => {
+     
       this.setState({
         channelTitle : data.val(),
       })
     })
-    var messRef = firebase.database().ref('/conversation ' + this.state.convID + '/messages/')
-    messRef.on('child_added', (data) => {
-      console.log(data.val());
-      console.log(data.key);
+    var messRef = firebase.database().ref('/conversation ' + this.state.convID + '/messages/');
+    messRef.limitToLast(20).on('child_added', (data) => {
+     
       var messArr = this.state.messages.slice();
       var newMessage = {
         user : {
@@ -67,35 +72,38 @@ export default class Conversation extends Component {
       
       this.setState({ 
         messages: messArr, 
-        
       })
-
+     
     });
   }
-  componentDidMount() {
-     var convoRef = firebase.database().ref('/userCount');
-     convoRef.set(this.state.numUsers + 1);
-  }
-
-  componentWillUnmount() {
-    console.log(this.state.numUsers);
-     var convoRef = firebase.database().ref('/userCount');
-     convoRef.set(this.state.numUsers - 1);
-  }
+  
 
   onSend(messages = []) {
     for(var i = 0; i < messages.length; i++) {
        var newMessage = firebase.database().ref('/conversation ' + this.state.convID + '/messages/').push();
-       console.log(this.state.userID);
+       console.log("Here is the user ID: " + this.state.userID);
        newMessage.set({ 
          text: messages[i].text,
          user: this.state.userID,
        })
+       console.log("After the fact");
     }
    
   }
+  componentWillUnmount() {
+    var messRef = firebase.database().ref('/conversation ' + this.state.convID + '/messages/');
+    messRef.off();
+
+    var userCountRef = firebase.database().ref('/userCount');
+    userCountRef.transaction((userCount) => {
+
+      return (userCount || 0) - 1;
+    });
+  }
 
   render() {
+    console.log(this.state.numConvos);
+    console.log(this.state.numUsers);
     return (
       <View style={styles.bg}>
         <View style={styles.header}>

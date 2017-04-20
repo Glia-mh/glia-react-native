@@ -18,19 +18,26 @@ export default class About extends Component {
       convID: 1,
     }
     //Firebase things 
-    var bioRef = firebase.database().ref('/conversation ' + this.state.convID);
+    var bioRef = firebase.database().ref('/conversation ' + this.state.convID + '/counselorBio');
+    var nameRef = firebase.database().ref('/conversation ' + this.state.convID + '/counselorName');
+    var imageRef = firebase.database().ref('/conversation ' + this.state.convID + '/counselorImage');
 
     bioRef.once('value', (data) => {
-      console.log("HERES THE DATA: " );
-      console.log(data.val());
       this.setState({
-        name : data.val().counselorName,
-        bio : data.val().counselorBio,
-        imageURL: data.val().counselorImage,
+        bio : data.val(),
       })
-      console.log(this.state.bio);
-      console.log(this.state.name);
+     
     });
+    nameRef.once('value',(data) =>{
+      this.setState({
+        name: data.val(),
+      })
+    });
+    imageRef.once('value', (data) => {
+      this.setState({
+        imageURL : data.val(),
+      })
+    })
 
   }
 
