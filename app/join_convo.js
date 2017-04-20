@@ -17,13 +17,50 @@ var config = {
 
 export default class JoinConvo extends Component {
 
+    constructor(props) {
+      super(props);
+      this.state = {
+        convID: 1,
+        numUsers: 0,
+        numConvos: 1,
+      }
+
+    
+
+  }
+  componentWillMount() {
+      /* firebase things */
+      var numConvosRef = firebase.database().ref('/numConvos');
+    numConvosRef.once('value',(data) => {
+      this.setState({
+        numConvos: data.val(),
+      })
+    });
+    console.log("Between firebase things");
+    var userCountRef = firebase.database().ref('/userCount');
+    userCountRef.transaction((userCount) => {
+      this.setState({
+        numUsers: (userCount || 0),
+      })
+      return (userCount || 0);
+    });
+    console.log("End of firebase things");
+  }
+
     render() {
+
+      var convNumber = Math.trunc(this.state.numUsers / (4 * this.state.numConvos)) + 1;
+      console.log("NumUsers: " + this.state.numUsers);
+      console.log("NumConvos: " + this.state.numConvos);
+      console.log(convNumber);
+
+      const goToConversation = () => Actions.conversation({convID: convNumber}); 
       return (
         <View style={styles.background}>
           <Image style={styles.top_image} source={require('./images/entirelogog.png')}/>
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={Actions.conversation}
+            onPress={goToConversation}
             >
             <View style={styles.outer_circle}>
               <View style={styles.inner_circle}>

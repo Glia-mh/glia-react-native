@@ -26,18 +26,12 @@ export default class Conversation extends Component {
     };
     console.log(this.state.messages);
    this.onSend = this.onSend.bind(this);
+   
 
   }
   componentWillMount() {
     /* ---- get valid convID ---- */
-    var numConvosRef = firebase.database().ref('/numConvos');
-    numConvosRef.once('value',(data) => {
-      this.setState({
-        numConvos: data.val(),
-      })
-    });
-  
-    var userCountRef = firebase.database().ref('/userCount');
+     var userCountRef = firebase.database().ref('/userCount');
     userCountRef.transaction((userCount) => {
       this.setState({
         numUsers: (userCount || 0) + 1,
@@ -46,15 +40,18 @@ export default class Conversation extends Component {
     });
 
     
-
-     var titleRef = firebase.database().ref('/conversation ' + this.state.convID + '/title');
+    this.setState({
+      convID: this.props.convID,
+    })
+    console.log("Heres the conversation ID: " + this.props.convID);
+     var titleRef = firebase.database().ref('/conversation ' + this.props.convID + '/title');
     titleRef.once('value', (data) => {
      
       this.setState({
         channelTitle : data.val(),
       })
     })
-    var messRef = firebase.database().ref('/conversation ' + this.state.convID + '/messages/');
+    var messRef = firebase.database().ref('/conversation ' + this.props.convID + '/messages/');
     messRef.limitToLast(20).on('child_added', (data) => {
      
       var messArr = this.state.messages.slice();
@@ -80,7 +77,7 @@ export default class Conversation extends Component {
 
   onSend(messages = []) {
     for(var i = 0; i < messages.length; i++) {
-       var newMessage = firebase.database().ref('/conversation ' + this.state.convID + '/messages/').push();
+       var newMessage = firebase.database().ref('/conversation ' + this.props.convID + '/messages/').push();
        console.log("Here is the user ID: " + this.state.userID);
        newMessage.set({ 
          text: messages[i].text,
@@ -91,7 +88,7 @@ export default class Conversation extends Component {
    
   }
   componentWillUnmount() {
-    var messRef = firebase.database().ref('/conversation ' + this.state.convID + '/messages/');
+    var messRef = firebase.database().ref('/conversation ' + this.props.convID + '/messages/');
     messRef.off();
 
     var userCountRef = firebase.database().ref('/userCount');
