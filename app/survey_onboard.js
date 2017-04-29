@@ -4,7 +4,7 @@
 import React, { Component, } from 'react';
 import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpacity, ScrollView} from 'react-native';
 
-import {Actions} from 'react-native-router-flux';
+
 
 
 export default class SurveyOnBoard extends Component {
@@ -17,7 +17,7 @@ export default class SurveyOnBoard extends Component {
           <Text style={[styles.base_text, styles.sub_text]}> Please take this survey so we can better serve you! </Text>
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={Actions.survey}
+            onPress={() => this.props.navigation.navigate("Survey")}
             >
 
             <View style={styles.outer_circle}>
@@ -27,7 +27,8 @@ export default class SurveyOnBoard extends Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity style={styles.skip_button}
-            onPress={Actions.joinConvo}>
+          onPress={() => this.props.navigation.navigate("JoinConversation")}
+            >
             <Text style={[styles.base_text, styles.sub_text, styles.marginer]}> Skip Survey </Text>
           </TouchableOpacity>
 

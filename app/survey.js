@@ -1,6 +1,6 @@
 import React, { Component, } from 'react';
 import { AppRegistry, Text, View,StyleSheet,Image,TouchableHighlight,TouchableOpacity, ScrollView} from 'react-native';
-import {Actions} from 'react-native-router-flux';
+
 
 import {Container, Content, Icon,Picker,Tab, ListItem, Radio, Tabs,Header,TabHeading} from 'native-base';
 
@@ -10,24 +10,6 @@ import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 
-
-class SubmitButton extends Component {
-
-  render() {
-    return (
-
-        <TouchableOpacity
-          onPress={Actions.joinConvo}
-          >
-            <View style={styles.background}>
-                <Text style={styles.help_text}> Submit Survey </Text>
-            </View>
-        </TouchableOpacity>
-
-
-    )
-  }
-}
 
 const btn = StyleSheet.create({
   background : {
@@ -84,13 +66,24 @@ class Question extends Component {
           onPress={(value) => {this.setState({value:value})}}
         />
         </View>
-        {this.props.isLast ? <SubmitButton />: null }
+        {this.props.isLast ?  <TouchableOpacity
+          onPress={() => this.props.submission(this)}
+          >
+            <View style={styles.background}>
+                <Text style={styles.help_text}> Submit Survey </Text>
+            </View>
+        </TouchableOpacity> : null }
       </View>
     )
   }
 }
 
 export default class Survey extends Component {
+
+  constructor(props) {
+    super(props);
+    this.submitPressed = this.submitPressed.bind(this);
+  }
 
   state = {
     index: 0,
@@ -120,6 +113,11 @@ export default class Survey extends Component {
     )
   };
 
+  submitPressed() {
+   
+    this.props.navigation.navigate("JoinConversation");
+  }
+
   _renderScene = ({ route }) => {
     switch (route.key) {
     case '1':
@@ -139,7 +137,7 @@ export default class Survey extends Component {
     case '8':
       return <Question questionNumber='8' question="Moving or speaking slowly or being very fidgety or restless" />
     case '9':
-      return <Question questionNumber='9' isLast question="Thoughts that you would be better off dead, or injured" />
+      return <Question questionNumber='9' isLast submission={this.submitPressed} question="Thoughts that you would be better off dead, or injured" />
     default:
       return null;
     }

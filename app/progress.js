@@ -1,7 +1,7 @@
 import React, { Component, } from 'react';
 import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpacity} from 'react-native';
 
-import {Actions,ActionConst} from 'react-native-router-flux';
+
 
 
 export default class About extends Component {
@@ -11,7 +11,7 @@ export default class About extends Component {
     <View style={styles.bg}>
       <View style={styles.header}>
         <TouchableOpacity
-          onPress={Actions.pop}
+         onPress={() => this.props.navigation.goBack()}
           >
           <Image source={require('./images/close.png')} style={styles.back_icon}
           />

@@ -1,6 +1,6 @@
 import React, { Component, } from 'react';
 import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpacity, ScrollView} from 'react-native';
-import {Actions} from 'react-native-router-flux';
+
 
 
 export default class Help extends Component {

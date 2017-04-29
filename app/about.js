@@ -2,9 +2,7 @@
 import React, { Component, } from 'react';
 import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpacity} from 'react-native';
 
-import {Actions,ActionConst} from 'react-native-router-flux';
 
-import * as firebase from 'firebase';
 
 export default class About extends Component {
 
@@ -17,28 +15,6 @@ export default class About extends Component {
       name : "",
       convID: 1,
     }
-    //Firebase things 
-    var bioRef = firebase.database().ref('/conversation ' + this.state.convID + '/counselorBio');
-    var nameRef = firebase.database().ref('/conversation ' + this.state.convID + '/counselorName');
-    var imageRef = firebase.database().ref('/conversation ' + this.state.convID + '/counselorImage');
-
-    bioRef.once('value', (data) => {
-      this.setState({
-        bio : data.val(),
-      })
-     
-    });
-    nameRef.once('value',(data) =>{
-      this.setState({
-        name: data.val(),
-      })
-    });
-    imageRef.once('value', (data) => {
-      this.setState({
-        imageURL : data.val(),
-      })
-    })
-
   }
 
   render() {
@@ -46,7 +22,7 @@ export default class About extends Component {
     <View style={styles.bg}>
       <View style={styles.header}>
         <TouchableOpacity
-          onPress={Actions.pop}
+          onPress={() => this.props.navigation.goBack()}
           >
           <Image source={require('./images/close.png')} style={styles.back_icon}
           />

@@ -1,19 +1,5 @@
 import React, { Component, } from 'react';
 import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpacity, ScrollView} from 'react-native';
-import {Actions} from 'react-native-router-flux';
-
-import * as firebase from 'firebase';
-
-
-var config = {
-   apiKey: "AIzaSyCj_OQ9YvnLxWUWmVLI7OhIGDEwCgKwYK0",
-   authDomain: "glia-backend.firebaseapp.com",
-   databaseURL: "https://glia-backend.firebaseio.com",
-   projectId: "glia-backend",
-   storageBucket: "glia-backend.appspot.com",
-   messagingSenderId: "766206247203"
- };
- firebase.initializeApp(config);
 
 export default class JoinConvo extends Component {
 
@@ -30,37 +16,18 @@ export default class JoinConvo extends Component {
   }
   componentWillMount() {
       /* firebase things */
-      var numConvosRef = firebase.database().ref('/numConvos');
-    numConvosRef.once('value',(data) => {
-      this.setState({
-        numConvos: data.val(),
-      })
-    });
-    console.log("Between firebase things");
-    var userCountRef = firebase.database().ref('/userCount');
-    userCountRef.transaction((userCount) => {
-      this.setState({
-        numUsers: (userCount || 0),
-      })
-      return (userCount || 0);
-    });
-    console.log("End of firebase things");
+     
   }
 
     render() {
 
-      var convNumber = Math.trunc(this.state.numUsers / (4 * this.state.numConvos)) + 1;
-      console.log("NumUsers: " + this.state.numUsers);
-      console.log("NumConvos: " + this.state.numConvos);
-      console.log(convNumber);
-
-      const goToConversation = () => Actions.conversation({convID: convNumber}); 
+      //const goToConversation = () => Actions.conversation({convID: convNumber}); 
       return (
         <View style={styles.background}>
           <Image style={styles.top_image} source={require('./images/entirelogog.png')}/>
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={goToConversation}
+            onPress={() => this.props.navigation.navigate("Conversation")}
             >
             <View style={styles.outer_circle}>
               <View style={styles.inner_circle}>
@@ -71,7 +38,7 @@ export default class JoinConvo extends Component {
 
           <TouchableOpacity
             style={styles.help_cont}
-            onPress={Actions.help}
+            onPress={() => this.props.navigation.navigate("Help")}
             >
             <Text style={styles.help_text}> Help and Information </Text>
           </TouchableOpacity>

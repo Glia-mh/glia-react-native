@@ -1,7 +1,7 @@
 import React, { Component, } from 'react';
 import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight } from 'react-native';
 
-import {Scene, Router} from 'react-native-router-flux';
+
 
 import GliaLogin from './login.js';
 import SurveyOnBoard from './survey_onboard.js';
