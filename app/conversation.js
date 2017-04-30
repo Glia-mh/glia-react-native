@@ -28,44 +28,11 @@ export default class Conversation extends Component {
     
     pubnub.setUUID(PubNub.generateUUID());
     
-   
-
-    pubnub.hereNow({
-    channels:["channel 1"],
-    },
-    (status, response) => {
-      if(status.error) {
-        //TODO: Fix issue where user has no connectivity
-        console.warn("We hath failed");
-        
-      }
-      else {
-        //console.error(response);
-        if(response.totalOccupancy > 5) {
-          conversationID += 1;
-        }
-        else {
-      
-        }
-      }
-    })
     //Calculate the freaking channelID
-    
-    
    this.onSend = this.onSend.bind(this);
-   
-
   }
-  
-  componentDidMount() {
-   
-    //Pubnub stuff
-    var id = pubnub.getUUID();
-     this.setState({
-      userID: id,
-    })
-   // console.warn(this.state.userID);
-    pubnub.addListener({
+
+  eventList = {
       message: (m) => {
        // console.error(m.message.such);
        var newMess = [m.message.such];
@@ -75,7 +42,36 @@ export default class Conversation extends Component {
         });
       
       }
+    };
+  
+  componentWillMount() {
+  
+    pubnub.history({
+      channel: this.state.channelID,
+      count: 20,
+    },(status,response) => {
+     
+      var newMessages = this.state.messages;
+     for(var i = 0; i < response.messages.length; i++) {
+     
+       newMessages.push(response.messages[i].entry.such);
+     }
+      this.setState({
+        messages: newMessages,
+      })
     })
+  }
+
+  componentDidMount() {
+   
+    //Pubnub stuff
+    var id = pubnub.getUUID();
+     this.setState({
+      userID: id,
+    })
+   // console.warn(this.state.userID);
+
+    pubnub.addListener(this.eventList);
 
     pubnub.subscribe({
       channels: [this.state.channelID],
@@ -101,18 +97,9 @@ export default class Conversation extends Component {
     })
   }
 }
-    //Messages have .text attribute 
-   /* console.warn(messages);
-    for(var i = 0; i < messages.length; i++) {
-        pubnub.publish({
-            message: {
-              such: messages[i],
-            },
-            channel: this.state.channelID,
-        },(status,response) => {
-
-        })
-    }*/
+componentWillUnmount() {
+  pubnub.removeListener(this.eventList);
+}
   
   
 
