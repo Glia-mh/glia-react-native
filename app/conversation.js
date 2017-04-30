@@ -3,7 +3,15 @@ import React, { Component, } from 'react';
 import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpacity, ScrollView} from 'react-native';
 
 
+import PubNub from 'pubnub';
+
 import { GiftedChat,Bubble } from 'react-native-gifted-chat';
+
+const pubnub = new PubNub({
+    subscribeKey: "sub-c-db3b3db0-2d30-11e7-87b6-02ee2ddab7fe",
+    publishKey: "pub-c-db8bb359-b20e-415f-80d9-0958db03625c",
+    ssl: true,
+  });
 
 export default class Conversation extends Component {
   
@@ -12,28 +20,100 @@ export default class Conversation extends Component {
 
     this.state = {
       messages: [],
+      userID: "",
       channelTitle: "",
-      convID: 1,
-      numUsers: 0,
-      numConvos: 1,
-  
+      channelID: "Conversation 1",
+      userThumbnail: "https://www.timeshighereducation.com/sites/default/files/byline_photos/default-avatar.png",
     };
+    
+    pubnub.setUUID(PubNub.generateUUID());
+    
+   
+
+    pubnub.hereNow({
+    channels:["channel 1"],
+    },
+    (status, response) => {
+      if(status.error) {
+        //TODO: Fix issue where user has no connectivity
+        console.warn("We hath failed");
+        
+      }
+      else {
+        //console.error(response);
+        if(response.totalOccupancy > 5) {
+          conversationID += 1;
+        }
+        else {
+      
+        }
+      }
+    })
+    //Calculate the freaking channelID
+    
     
    this.onSend = this.onSend.bind(this);
    
 
   }
-  componentWillMount() {
-    /* ---- get valid convID ---- */
-    //Pubnub stuff
-  }
   
+  componentDidMount() {
+   
+    //Pubnub stuff
+    var id = pubnub.getUUID();
+     this.setState({
+      userID: id,
+    })
+   // console.warn(this.state.userID);
+    pubnub.addListener({
+      message: (m) => {
+       // console.error(m.message.such);
+       var newMess = [m.message.such];
+        var newArr =  GiftedChat.append(this.state.messages, newMess);
+        this.setState({
+          messages: newArr,
+        });
+      
+      }
+    })
+
+    pubnub.subscribe({
+      channels: [this.state.channelID],
+      withPresence: true,
+    })
+  }
+
 
   onSend(messages = []) {
-    //Messages have .text attribute 
-
-   
+  var newMessages = GiftedChat.append(this.state.messages, messages);
+  for(var i = 0; i < messages.length; i++) {
+    pubnub.publish({
+      message : {
+        such: messages[i],
+      },
+      channel: this.state.channelID,
+    },(status,response) => {
+      if(status.error) {
+        console.warn("Failed to send message");
+      } else {
+      //  console.warn("Message sent successfully to pubnub");
+      }
+    })
   }
+}
+    //Messages have .text attribute 
+   /* console.warn(messages);
+    for(var i = 0; i < messages.length; i++) {
+        pubnub.publish({
+            message: {
+              such: messages[i],
+            },
+            channel: this.state.channelID,
+        },(status,response) => {
+
+        })
+    }*/
+  
   
 
   render() {
@@ -48,7 +128,7 @@ export default class Conversation extends Component {
             />
           </TouchableOpacity>
 
-          <Text style={styles.top_title}>{this.state.channelTitle}</Text>
+          <Text style={styles.top_title}>{this.state.channelID}</Text>
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate("About")}
             >

@@ -9,6 +9,7 @@
   "dependencies": {
     "layer-websdk": "^3.1.1",
     "native-base": "^2.1.0",
+    "pubnub": "^4.8.0",
     "react": "^16.0.0-alpha.6",
     "react-native": "^0.43.4",
     "react-native-device-uuid": "^1.2.0",
