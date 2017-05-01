@@ -1,6 +1,15 @@
 import React, { Component, } from 'react';
 import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpacity, ScrollView} from 'react-native';
 
+import PubNub from 'pubnub';
+
+const pubnub = new PubNub({
+    subscribeKey: "sub-c-db3b3db0-2d30-11e7-87b6-02ee2ddab7fe",
+    publishKey: "pub-c-db8bb359-b20e-415f-80d9-0958db03625c",
+    ssl: true,
+  });
+
+
 export default class JoinConvo extends Component {
 
     constructor(props) {
@@ -10,6 +19,18 @@ export default class JoinConvo extends Component {
         numUsers: 0,
         numConvos: 1,
       }
+      //Calculate the correct chatroom 
+      pubnub.hereNow({
+        includeUUIDs: false,
+        includeState: false,
+      },(status,response) => {
+        var totalUsers = response.totalOccupancy;
+        conversationID = Math.trunc(totalUsers / 4) + 1;
+        this.setState({
+          convID: conversationID,
+        })
+      })
+      
 
     
 
@@ -20,6 +41,7 @@ export default class JoinConvo extends Component {
   }
 
     render() {
+      console.warn(this.state.convID);
 
       //const goToConversation = () => Actions.conversation({convID: convNumber}); 
       return (
@@ -27,7 +49,7 @@ export default class JoinConvo extends Component {
           <Image style={styles.top_image} source={require('./images/entirelogog.png')}/>
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => this.props.navigation.navigate("Conversation")}
+            onPress={() => this.props.navigation.navigate("Conversation",{convoID: this.state.convID})}
             >
             <View style={styles.outer_circle}>
               <View style={styles.inner_circle}>

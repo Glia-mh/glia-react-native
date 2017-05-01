@@ -29,6 +29,7 @@ export default class Conversation extends Component {
     pubnub.setUUID(PubNub.generateUUID());
     
     //Calculate the freaking channelID
+   
    this.onSend = this.onSend.bind(this);
   }
 
@@ -45,6 +46,12 @@ export default class Conversation extends Component {
     };
   
   componentWillMount() {
+
+  
+    var channID = "Conversation " + this.props.navigation.state.params.convoID;
+    this.setState({
+      channelID: channID,
+    });
   
     pubnub.history({
       channel: this.state.channelID,
@@ -64,12 +71,12 @@ export default class Conversation extends Component {
 
   componentDidMount() {
    
-    //Pubnub stuff
+    //Sets the unique ID to the user 
+    //TODO: 
     var id = pubnub.getUUID();
      this.setState({
       userID: id,
     })
-   // console.warn(this.state.userID);
 
     pubnub.addListener(this.eventList);
 
@@ -99,6 +106,7 @@ export default class Conversation extends Component {
 }
 componentWillUnmount() {
   pubnub.removeListener(this.eventList);
+  pubnub.unsubscribeAll();
 }
   
   
@@ -135,6 +143,7 @@ componentWillUnmount() {
         onSend={this.onSend}
         user={{
           _id: this.state.userID,
+          avatar: this.state.userThumbnail,
         }}
         styles={{
           bubbleRight: {
