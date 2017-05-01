@@ -56,10 +56,11 @@ export default class Conversation extends Component {
     pubnub.history({
       channel: this.state.channelID,
       count: 20,
+    
     },(status,response) => {
      
       var newMessages = this.state.messages;
-     for(var i = 0; i < response.messages.length; i++) {
+     for(var i = response.messages.length-1; i >= 0 ; i--) {
      
        newMessages.push(response.messages[i].entry.such);
      }
@@ -106,7 +107,9 @@ export default class Conversation extends Component {
 }
 componentWillUnmount() {
   pubnub.removeListener(this.eventList);
-  pubnub.unsubscribeAll();
+  pubnub.unsubscribe({
+    channels: [this.state.channelID],
+  });
 }
   
   

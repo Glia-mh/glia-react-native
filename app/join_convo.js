@@ -41,9 +41,7 @@ export default class JoinConvo extends Component {
   }
 
     render() {
-      console.warn(this.state.convID);
-
-      //const goToConversation = () => Actions.conversation({convID: convNumber}); 
+    
       return (
         <View style={styles.background}>
           <Image style={styles.top_image} source={require('./images/entirelogog.png')}/>
