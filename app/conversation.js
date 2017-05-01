@@ -167,6 +167,7 @@ componentWillUnmount() {
         user={{
           _id: this.state.userID,
           avatar: this.state.userThumbnail,
+         
         }}
         styles={{
           bubbleRight: {
