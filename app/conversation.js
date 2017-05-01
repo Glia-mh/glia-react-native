@@ -1,6 +1,10 @@
 
 import React, { Component, } from 'react';
-import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpacity, ScrollView} from 'react-native';
+import { AppRegistry, 
+  Text,
+  View,
+  StyleSheet,Image,TouchableHighlight,
+  TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
 
 
 import PubNub from 'pubnub';
@@ -25,6 +29,22 @@ export default class Conversation extends Component {
       channelID: "Conversation 1",
       userThumbnail: "https://www.timeshighereducation.com/sites/default/files/byline_photos/default-avatar.png",
     };
+    //Gets the user ID, if it exists, or generates a new one.
+    AsyncStorage.getItem("userID").then((value) => {
+      if(value != null) {
+        pubnub.setUUID(value);
+        this.setState({
+          userID: value,
+        })
+      }
+      else {
+        var uid = PubNub.generateUUID();
+        AsyncStorage.setItem("userID", uid);
+        this.setState({
+          userID: uid,
+        })
+      }
+    })
     
     pubnub.setUUID(PubNub.generateUUID());
     
