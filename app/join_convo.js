@@ -20,28 +20,17 @@ export default class JoinConvo extends Component {
         numConvos: 1,
       }
       //Calculate the correct chatroom 
-      pubnub.hereNow({
-        includeUUIDs: false,
-        includeState: false,
-      },(status,response) => {
-        var totalUsers = response.totalOccupancy;
-        conversationID = Math.trunc(totalUsers / 4) + 1;
-        this.setState({
-          convID: conversationID,
-        })
-      })
+      
       
 
     
 
   }
   componentWillMount() {
-      /* firebase things */
      
   }
 
     render() {
-      console.warn(this.state.convID);
       return (
         <View style={styles.background}>
           <Image style={styles.top_image} source={require('./images/entirelogog.png')}/>

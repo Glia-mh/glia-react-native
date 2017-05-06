@@ -136,7 +136,7 @@ export default class Survey extends Component {
       return <Question questionNumber='7' question="Trouble concentrating on things, such as reading or Televison" />
     case '8':
       return <Question questionNumber='8' question="Moving or speaking slowly or being very fidgety or restless" />
-    case '9':
+   case '9':
       return <Question questionNumber='9' isLast submission={this.submitPressed} question="Thoughts that you would be better off dead, or injured" />
     default:
       return null;
@@ -144,9 +144,11 @@ export default class Survey extends Component {
   };
 
   render() {
-    return (
-
+    console.warn("Render Called");
+    return (  
+      
         <TabViewAnimated
+          
            style={styles.container}
            navigationState={this.state}
            renderScene={this._renderScene}

@@ -206,6 +206,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.2,
   },
   bg: {
+    backgroundColor: "#FFFFFF",
     flex: 1,
   },
   top_title : {

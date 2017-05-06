@@ -47,6 +47,7 @@ export default class About extends Component {
 const styles = StyleSheet.create({
   bg : {
     flex: 1,
+    backgroundColor: '#FFFFFF',
   },
   img_container : {
     alignItems: 'center',
