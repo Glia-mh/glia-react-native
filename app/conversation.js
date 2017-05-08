@@ -29,7 +29,7 @@ export default class Conversation extends Component {
       channelID: "Conversation 1",
       userThumbnail: "https://www.timeshighereducation.com/sites/default/files/byline_photos/default-avatar.png",
     };
-    //Gets the user ID, if it exists, or generates a new one.
+   
      
     
 
@@ -124,11 +124,12 @@ componentWillUnmount() {
   
 
   render() {
-    console.warn(pubnub.getUUID());
+   
     return (
       <View style={styles.bg}>
         <View style={styles.header}>
           <TouchableOpacity
+          
             onPress={() => this.props.navigation.goBack()}
             >
             <Image source={require('./images/close.png')} style={styles.back_icon}
@@ -137,12 +138,14 @@ componentWillUnmount() {
 
           <Text style={styles.top_title}>{this.state.channelID}</Text>
           <TouchableOpacity
+            disabled={true}
             onPress={() => this.props.navigation.navigate("About")}
             >
             <Image source={require('./images/about.png')} style={styles.detail_icon}
             />
           </TouchableOpacity>
           <TouchableOpacity
+          disabled={true}
            onPress={() => this.props.navigation.navigate("Progress")}
             >
             <Image source={require('./images/progress.png')} style={styles.detail_icon}

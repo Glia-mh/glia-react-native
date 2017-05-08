@@ -40,36 +40,70 @@ export default class JoinConvo extends Component {
               fetch(statURL).then((response) => {
                 response.json().then((data) => {
                   var conversationID = Math.trunc( data.userCount / 4 + 1);
-                  
+
+                  var postURL = "http://glia-env.y5rqrbpijs.us-west-2.elasticbeanstalk.com/Glia/user/";
+                  var data = { 'gliaID': value, 'progress': 0, 'conversationID':  conversationID, };
+                  fetch(postURL, {
+                    headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                    },
+                    method: "POST",
+                    body: JSON.stringify(data),
+                  }).then((res) => {
+
+                    if(res.status === 201) {
+                      this.setState({
+                        convID: conversationID
+                      })
+                    }
+                  })
+                  .catch((err) => {console.warn(err)})
                   })
                 })
             }
             //The user exists in the database! 
-            else {
-
-            }
           })
-        }).catch((error) => {
-          console.error(error);
         })
+        .catch((error) => {console.error(error)})
       }
+      //The USERID is not in async storage
       else {
         var uid = PubNub.generateUUID();
         AsyncStorage.setItem("userID", uid);
         this.setState({
           userID: uid,
         })
+         var statURL = "http://glia-env.y5rqrbpijs.us-west-2.elasticbeanstalk.com/Glia/statistics/?format=json";
+        fetch(statURL).then((response) => {
+          response.json().then((data) => {
+            var conversationID = Math.trunc( data.userCount / 4 + 1);
+
+            var postURL = "http://glia-env.y5rqrbpijs.us-west-2.elasticbeanstalk.com/Glia/user/";
+            var data = { 'gliaID': value, 'progress': 0, 'conversationID':  conversationID, };
+            fetch(postURL, {
+              headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+              },
+              method: "POST",
+              body: JSON.stringify(data),
+            }).then((res) => {
+
+              if(res.status === 201) {
+                this.setState({
+                  convID: conversationID
+                })
+              }
+            })
+            .catch((err) => {console.warn(err)})
+            })
+          })
       }
     })
-    
-     
-
-    
-
   }
-  componentWillMount() {
-    
-  }
+
+
 
     render() {
       return (
