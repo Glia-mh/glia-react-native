@@ -30,23 +30,12 @@ export default class Conversation extends Component {
       userThumbnail: "https://www.timeshighereducation.com/sites/default/files/byline_photos/default-avatar.png",
     };
     //Gets the user ID, if it exists, or generates a new one.
-    AsyncStorage.getItem("userID").then((value) => {
-      if(value != null) {
-        pubnub.setUUID(value);
-        this.setState({
-          userID: value,
-        })
-      }
-      else {
-        var uid = PubNub.generateUUID();
-        AsyncStorage.setItem("userID", uid);
-        this.setState({
-          userID: uid,
-        })
-      }
-    })
+     
     
-    pubnub.setUUID(PubNub.generateUUID());
+
+
+    
+  //  pubnub.setUUID(PubNub.generateUUID());
     
     //Calculate the freaking channelID
    
@@ -91,7 +80,7 @@ export default class Conversation extends Component {
   }
 
   componentDidMount() {
-   
+    
     //Sets the unique ID to the user 
     //TODO: 
     var id = pubnub.getUUID();
@@ -135,7 +124,7 @@ componentWillUnmount() {
   
 
   render() {
-   
+    console.warn(pubnub.getUUID());
     return (
       <View style={styles.bg}>
         <View style={styles.header}>

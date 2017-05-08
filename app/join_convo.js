@@ -1,5 +1,6 @@
 import React, { Component, } from 'react';
-import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpacity, ScrollView} from 'react-native';
+import { AppRegistry,
+    AsyncStorage, Text,View,StyleSheet,Image,TouchableHighlight,TouchableOpacity, ScrollView} from 'react-native';
 
 import PubNub from 'pubnub';
 
@@ -20,14 +21,54 @@ export default class JoinConvo extends Component {
         numConvos: 1,
       }
       //Calculate the correct chatroom 
-      
-      
+       AsyncStorage.getItem("userID").then((value) => {
+      if(value != null) {
+        pubnub.setUUID(value);
+        this.setState({
+          userID: value,
+        })
+        //Make fetch GET request to database 
+        var url = "http://glia-env.y5rqrbpijs.us-west-2.elasticbeanstalk.com/Glia/user/" + value + "?format=json";
+        
+        fetch(url).then((response) => {
+          response.json().then((data) => {
+
+            //Gives you conversation and user count
+            if(response.status === 404) {
+              //Calculate the correct conversation ID, and add it 
+              var statURL = "http://glia-env.y5rqrbpijs.us-west-2.elasticbeanstalk.com/Glia/statistics/?format=json";
+              fetch(statURL).then((response) => {
+                response.json().then((data) => {
+                  var conversationID = Math.trunc( data.userCount / 4 + 1);
+                  
+                  })
+                })
+            }
+            //The user exists in the database! 
+            else {
+
+            }
+          })
+        }).catch((error) => {
+          console.error(error);
+        })
+      }
+      else {
+        var uid = PubNub.generateUUID();
+        AsyncStorage.setItem("userID", uid);
+        this.setState({
+          userID: uid,
+        })
+      }
+    })
+    
+     
 
     
 
   }
   componentWillMount() {
-     
+    
   }
 
     render() {
