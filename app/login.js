@@ -1,9 +1,32 @@
 
 import React, { Component, } from 'react';
-import { AppRegistry, Text,View,StyleSheet,Image,TouchableHighlight } from 'react-native';
+import { AppRegistry, Text,View,StyleSheet,
+Image,
+TouchableHighlight,
+AsyncStorage,
+
+ } from 'react-native';
 
 
 export default class GliaLogin extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isReturning: false,
+    }
+  }
+
+  componentWillMount() {
+      AsyncStorage.getItem('username').then((value) => {
+              if(value) {
+                  this.setState({
+                    isReturning: true,
+                  });
+              }
+          })
+  }
 
   render() {
     return (
@@ -12,7 +35,14 @@ export default class GliaLogin extends Component {
         <View style={styles.background}>
         </View>
         <TouchableHighlight 
-        onPress={() => this.props.navigation.navigate("UserInput")}
+        onPress={() => {
+          if(this.state.isReturning) {
+             this.props.navigation.navigate('SurveyOnBoard');
+          }
+          else {
+             this.props.navigation.navigate("UserInput");
+          }}}
+         
         style={styles.login_button}>
         <View style={styles.login_button}>
           <Text style={styles.Login_test}>Log In</Text>

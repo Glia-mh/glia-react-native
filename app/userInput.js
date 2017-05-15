@@ -12,15 +12,12 @@ import { AppRegistry,
 
       constructor(props) {
           super(props);
-
           this.state = {
               username: "",
           }
       }
 
-
       render() {
-
         return (
             <View style={styles.background}>
             <Image source={require('./images/entirelogog.png')} style={styles.image}/>
@@ -35,7 +32,9 @@ import { AppRegistry,
             />
                 
             <TouchableOpacity style={styles.buttonStyle}
-            onPress={() => {this.props.navigation.navigate('SurveyOnBoard')}}
+            onPress={() => {
+                AsyncStorage.setItem('username',this.state.username);
+                this.props.navigation.navigate('SurveyOnBoard')}}
             >
                 <Text style={styles.textStyle}> Continue </Text>
             </TouchableOpacity>

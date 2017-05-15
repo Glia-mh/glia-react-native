@@ -25,6 +25,7 @@ export default class Conversation extends Component {
     this.state = {
       messages: [],
       userID: "",
+      username: "",
       channelTitle: "",
       channelID: "Conversation 1",
       userThumbnail: "https://www.timeshighereducation.com/sites/default/files/byline_photos/default-avatar.png",
@@ -50,6 +51,14 @@ export default class Conversation extends Component {
   
   componentWillMount() {
 
+    //Set Username: 
+    AsyncStorage.getItem('username').then((value) => {
+      if(value) {
+        this.setState({
+          username: value,
+        });
+      }
+    })
   
     var channID = "Conversation " + this.props.navigation.state.params.convoID;
     this.setState({
@@ -150,8 +159,12 @@ componentWillUnmount() {
         renderBubble={this.renderBubble.bind(this)}
         messages={this.state.messages}
         onSend={this.onSend}
+        displayNames={true}
+        shouldRenderUsername={true}
+        displayNamesInsideBubble={true}
         user={{
           _id: this.state.userID,
+          name: this.state.username,
           avatar: this.state.userThumbnail,
          
         }}
