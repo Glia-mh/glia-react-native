@@ -6,7 +6,7 @@ import { AppRegistry,
   StyleSheet,Image,TouchableHighlight,
   TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
 
-
+import GliaBubble from './gliaBubble.js';
 import PubNub from 'pubnub';
 
 import { GiftedChat,Bubble } from 'react-native-gifted-chat';
@@ -159,9 +159,6 @@ componentWillUnmount() {
         renderBubble={this.renderBubble.bind(this)}
         messages={this.state.messages}
         onSend={this.onSend}
-        displayNames={true}
-        shouldRenderUsername={true}
-        displayNamesInsideBubble={true}
         user={{
           _id: this.state.userID,
           name: this.state.username,
@@ -181,7 +178,7 @@ componentWillUnmount() {
 
   renderBubble(props) {
   return (
-    <Bubble
+    <GliaBubble
       {...props}
       wrapperStyle={{
         right: {

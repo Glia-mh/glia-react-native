@@ -24,6 +24,7 @@ import { AppRegistry,
             <Text style={[styles.textStyle,styles.padder]}> What would you want your username to be? </Text>
             <TextInput style={styles.inputStyle}
             placeholder="Username"
+            underlineColorAndroid='transparent'
             onChangeText={(text) => {
                 this.setState({
                     username: text,
