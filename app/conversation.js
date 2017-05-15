@@ -30,12 +30,6 @@ export default class Conversation extends Component {
       userThumbnail: "https://www.timeshighereducation.com/sites/default/files/byline_photos/default-avatar.png",
     };
    
-     
-    
-
-
-    
-  //  pubnub.setUUID(PubNub.generateUUID());
     
     //Calculate the freaking channelID
    

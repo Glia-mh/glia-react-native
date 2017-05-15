@@ -19,6 +19,7 @@ import About from './app/about.js';
 import Progress from './app/progress.js';
 import Help from './app/help.js';
 import Survey from './app/survey.js';
+import UserInput from './app/userInput.js';
 
 import { StackNavigator } from 'react-navigation';
 
@@ -32,8 +33,9 @@ const gliaApp = StackNavigator({
   JoinConversation : {screen: JoinConvo},
   Progress : {screen: Progress},
   Conversation : {screen: Conversation},
-  Help : {screen: Help} },
-   
+  Help : {screen: Help},
+  UserInput : {screen: UserInput},
+  }, 
   { headerMode: 'none' }
 );
 

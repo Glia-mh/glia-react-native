@@ -12,7 +12,7 @@ export default class GliaLogin extends Component {
         <View style={styles.background}>
         </View>
         <TouchableHighlight 
-        onPress={() => this.props.navigation.navigate("SurveyOnBoard")}
+        onPress={() => this.props.navigation.navigate("UserInput")}
         style={styles.login_button}>
         <View style={styles.login_button}>
           <Text style={styles.Login_test}>Log In</Text>
@@ -43,7 +43,7 @@ const styles = StyleSheet.create( {
     color: "#FFFFFF",
   },
   image: {
-    marginTop: 200,
+    marginTop: 158,
     height: 80,
     width: 220,
   }
