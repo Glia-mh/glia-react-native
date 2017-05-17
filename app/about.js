@@ -13,8 +13,36 @@ export default class About extends Component {
       bio : "",
       imageURL: "http://starshiptroopersrp.net/wiki/images/person_placeholder.png",
       name : "",
-      convID: 1,
+      convID: this.props.navigation.state.params.convID,
     }
+  }
+  componentWillMount() {
+    //Pull counselor info from database
+
+    var url1 = "http://glia-env.y5rqrbpijs.us-west-2.elasticbeanstalk.com/Glia/conversation/" + this.state.convID +  "?format=json";
+    fetch(url1)
+    .then((response) => {
+     
+      response.json().then((data) => {
+        console.log(data);
+        var counselorID = data.counselorID;
+        var url2 = "http://glia-env.y5rqrbpijs.us-west-2.elasticbeanstalk.com/Glia/counselor/" + counselorID + "?format=json";
+        fetch(url2)
+        .then((response) => {
+          response.json()
+          .then((data) => {
+            this.setState({
+              bio: data.counselorBio,
+              name: data.counselorName,
+              imageURL: data.counselorImageURL,
+            })
+          })
+        })
+      })
+      
+    })
+
+
   }
 
   render() {

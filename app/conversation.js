@@ -27,6 +27,7 @@ export default class Conversation extends Component {
       userID: "",
       username: "",
       channelTitle: "",
+      channNumber: 1,
       channelID: "Conversation 1",
       userThumbnail: "https://www.timeshighereducation.com/sites/default/files/byline_photos/default-avatar.png",
     };
@@ -63,6 +64,7 @@ export default class Conversation extends Component {
     var channID = "Conversation " + this.props.navigation.state.params.convoID;
     this.setState({
       channelID: channID,
+      channNumber: this.props.navigation.state.params.convoID,
     });
   
     pubnub.history({
@@ -141,8 +143,7 @@ componentWillUnmount() {
 
           <Text style={styles.top_title}>{this.state.channelID}</Text>
           <TouchableOpacity
-            disabled={true}
-            onPress={() => this.props.navigation.navigate("About")}
+            onPress={() => this.props.navigation.navigate("About", {convID: this.state.channNumber})}
             >
             <Image source={require('./images/about.png')} style={styles.detail_icon}
             />
