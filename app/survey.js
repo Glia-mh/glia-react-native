@@ -1,5 +1,13 @@
 import React, { Component, } from 'react';
-import { AppRegistry, Text, View,StyleSheet,Image,TouchableHighlight,TouchableOpacity, ScrollView} from 'react-native';
+import { AppRegistry,
+   Text, 
+   View,
+   StyleSheet,
+   Image,
+   TouchableHighlight,
+   TouchableOpacity,
+   AsyncStorage,
+   ScrollView} from 'react-native';
 
 
 import {Container, Content, Icon,Picker,Tab, ListItem, Radio, Tabs,Header,TabHeading} from 'native-base';
@@ -45,6 +53,9 @@ class Question extends Component {
         }
     }
     onValueChange (value: string) {
+
+
+
         this.setState({
             selected1 : value
         });
@@ -63,7 +74,9 @@ class Question extends Component {
           labelColor="#FFFFFF"
           initial={0}
 
-          onPress={(value) => {this.setState({value:value})}}
+          onPress={(value) => {
+            this.props.up(parseInt(this.props.questionNumber) - 1, value);
+            this.setState({value:value})}}
         />
         </View>
         {this.props.isLast ?  <TouchableOpacity
@@ -82,10 +95,14 @@ export default class Survey extends Component {
 
   constructor(props) {
     super(props);
+
+    
     this.submitPressed = this.submitPressed.bind(this);
+    this.updateValue = this.updateValue.bind(this);
   }
 
   state = {
+    answers : [0,0,0,0,0,0,0,0,0],
     index: 0,
     routes: [
       { key: '1', title: 'First' },
@@ -114,37 +131,51 @@ export default class Survey extends Component {
   };
 
   submitPressed() {
+   console.log(this.state.answers);
+   AsyncStorage.getItem('username').then((value)=> {
+    fetch("http://107.170.234.65:8000/Glia/get-user-id/?username=" + encodeURI(value) + "&phq9=" + encodeURI(this.state.answers.toString()),{
+      method: "PUT"
+    });
+   })
    
     this.props.navigation.navigate("JoinConversation");
+  }
+
+  updateValue(index, val) {
+    var newArr = this.state.answers;
+    newArr[index] = val;
+    this.setState({
+      answers: newArr,
+    })
   }
 
   _renderScene = ({ route }) => {
     switch (route.key) {
     case '1':
-      return <Question questionNumber='1' question="Little interest or pleasure in doing things" />;
+      return <Question questionNumber='1' up={this.updateValue} question="Little interest or pleasure in doing things" />;
     case '2':
-      return <Question questionNumber='2' question="Feeling down, depressed or hopeless" />;
+      return <Question questionNumber='2' up={this.updateValue} question="Feeling down, depressed or hopeless" />;
     case '3':
-      return <Question questionNumber='3' question="Trouble falling asleep, staying asleep, or sleeping too much" />
+      return <Question questionNumber='3' up={this.updateValue} question="Trouble falling asleep, staying asleep, or sleeping too much" />
     case '4':
-      return <Question questionNumber='4' question="Feeling tired or having little energy" />
+      return <Question questionNumber='4' up={this.updateValue} question="Feeling tired or having little energy" />
     case '5':
-      return <Question questionNumber='5' question="Poor appetite or overeating in some form"/>
+      return <Question questionNumber='5' up={this.updateValue} question="Poor appetite or overeating in some form"/>
     case '6':
-      return <Question questionNumber='6' question="Feeling bad about yourself - or that you’re a failure"/>
+      return <Question questionNumber='6' up={this.updateValue} question="Feeling bad about yourself - or that you’re a failure"/>
     case '7':
-      return <Question questionNumber='7' question="Trouble concentrating on things, such as reading or Televison" />
+      return <Question questionNumber='7' up={this.updateValue} question="Trouble concentrating on things, such as reading or Televison" />
     case '8':
-      return <Question questionNumber='8' question="Moving or speaking slowly or being very fidgety or restless" />
+      return <Question questionNumber='8' up={this.updateValue} question="Moving or speaking slowly or being very fidgety or restless" />
    case '9':
-      return <Question questionNumber='9' isLast submission={this.submitPressed} question="Thoughts that you would be better off dead, or injured" />
+      return <Question questionNumber='9' up={this.updateValue} isLast submission={this.submitPressed} question="Thoughts that you would be better off dead, or injured" />
     default:
       return null;
     }
   };
 
   render() {
-    console.warn("Render Called");
+    
     return (  
       
         <TabViewAnimated
