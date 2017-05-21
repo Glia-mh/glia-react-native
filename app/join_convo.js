@@ -17,99 +17,33 @@ export default class JoinConvo extends Component {
       super(props);
       this.state = {
         convID: 1,
+        isReady: false,
         numUsers: 0,
         numConvos: 1,
       }
       //Calculate the correct chatroom 
-       AsyncStorage.getItem("userID").then((value) => {
-      if(value != null) {
-        pubnub.setUUID(value);
-        this.setState({
-          userID: value,
-        })
-        //Make fetch GET request to database 
-        var url = "http://glia-env.y5rqrbpijs.us-west-2.elasticbeanstalk.com/Glia/user/" + value + "?format=json";
+      AsyncStorage.getItem('username').then((value) => {
+        fetch("http://107.170.234.65:8000/Glia/get-user-id/?username="  + encodeURI(value))
+        .then((response) => {
         
-        fetch(url).then((response) => {
-          response.json().then((data) => {
-
-            //Gives you conversation and user count
-            if(response.status === 404) {
-              //Calculate the correct conversation ID, and add it 
-              var statURL = "http://glia-env.y5rqrbpijs.us-west-2.elasticbeanstalk.com/Glia/statistics/?format=json";
-              fetch(statURL).then((response) => {
-                response.json().then((data) => {
-                  var conversationID = Math.trunc( data.userCount / 4 + 1);
-
-                  var postURL = "http://glia-env.y5rqrbpijs.us-west-2.elasticbeanstalk.com/Glia/user/";
-                  var data = { 'gliaID': value, 'progress': 0, 'conversationID':  conversationID, };
-                  fetch(postURL, {
-                    headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                    },
-                    method: "POST",
-                    body: JSON.stringify(data),
-                  }).then((res) => {
-
-                    if(res.status === 201) {
-                      this.setState({
-                        convID: conversationID
-                      })
-                    }
-                  })
-                  .catch((err) => {console.warn(err)})
-                  })
-                })
-            }
-            //The user exists in the database! 
-          })
-        })
-        .catch((error) => {console.error(error)})
-      }
-      //The USERID is not in async storage
-      else {
-        var uid = PubNub.generateUUID();
-        AsyncStorage.setItem("userID", uid);
-        this.setState({
-          userID: uid,
-        })
-         var statURL = "http://glia-env.y5rqrbpijs.us-west-2.elasticbeanstalk.com/Glia/statistics/?format=json";
-        fetch(statURL).then((response) => {
-          response.json().then((data) => {
-            var conversationID = Math.trunc( data.userCount / 4 + 1);
-
-            var postURL = "http://glia-env.y5rqrbpijs.us-west-2.elasticbeanstalk.com/Glia/user/";
-            var data = { 'gliaID': value, 'progress': 0, 'conversationID':  conversationID, };
-            fetch(postURL, {
-              headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-              },
-              method: "POST",
-              body: JSON.stringify(data),
-            }).then((res) => {
-
-              if(res.status === 201) {
-                this.setState({
-                  convID: conversationID
-                })
-              }
-            })
-            .catch((err) => {console.warn(err)})
+          response.json()
+          .then((data) => {
+           
+            this.setState({
+              isReady : true,
+              convID: data.conversationID,
             })
           })
-      }
-    })
+        })
+      })
   }
-
-
 
     render() {
       return (
         <View style={styles.background}>
           <Image style={styles.top_image} source={require('./images/entirelogog.png')}/>
           <TouchableOpacity
+            disabled={!this.state.isReady}
             activeOpacity={0.7}
             onPress={() => this.props.navigation.navigate("Conversation",{convoID: this.state.convID})}
             >

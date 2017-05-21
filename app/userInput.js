@@ -6,6 +6,7 @@ import { AppRegistry,
   StyleSheet,Image,TouchableHighlight,
   TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
 
+import Toast from 'react-native-root-toast';
 
 
   export default class UserInput extends Component {
@@ -34,8 +35,35 @@ import { AppRegistry,
                 
             <TouchableOpacity style={styles.buttonStyle}
             onPress={() => {
-                AsyncStorage.setItem('username',this.state.username);
-                this.props.navigation.navigate('SurveyOnBoard')}}
+               
+                var data = new FormData();
+                data.append("username",this.state.username);
+                data.append("progress", 0);
+                fetch("http://107.170.234.65:8000/Glia/create-user/",{
+                    method: "POST",
+                    body: data,
+                })
+                .then((response) => {
+                    if(response.status === 201) {
+                         AsyncStorage.setItem('username',this.state.username);
+                        this.props.navigation.navigate("SurveyOnBoard");
+                    }
+                    else if(response.status === 400) {
+                        let toast = Toast.show('The username is already in use!', {
+                             duration: Toast.durations.SHORT,
+                            position: Toast.positions.BOTTOM,
+                            shadow: true,
+                            animation: true,
+                            hideOnPress: true,
+                            delay: 0,
+                        })
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                })
+               // this.props.navigation.navigate('SurveyOnBoard')
+               }}
             >
                 <Text style={styles.textStyle}> Continue </Text>
             </TouchableOpacity>
@@ -61,11 +89,12 @@ import { AppRegistry,
         borderColor: "#FFFFFF",
         height: 70,
         padding: 10,
+        width: '90%',
         borderRadius: 5,
         marginBottom: 20,
         marginTop: 20,
-        marginLeft: 20,
-        marginRight: 20,
+        marginLeft: 'auto',
+        marginRight: 'auto',
     },
     textStyle : {
         textAlign: 'center',

@@ -19,30 +19,17 @@ export default class About extends Component {
   componentWillMount() {
     //Pull counselor info from database
 
-    var url1 = "http://glia-env.y5rqrbpijs.us-west-2.elasticbeanstalk.com/Glia/conversation/" + this.state.convID +  "?format=json";
+    var url1 = "http://107.170.234.65:8000/Glia/conversation/" + this.state.convID;
     fetch(url1)
     .then((response) => {
-     
       response.json().then((data) => {
-        console.log(data);
-        var counselorID = data.counselorID;
-        var url2 = "http://glia-env.y5rqrbpijs.us-west-2.elasticbeanstalk.com/Glia/counselor/" + counselorID + "?format=json";
-        fetch(url2)
-        .then((response) => {
-          response.json()
-          .then((data) => {
-            this.setState({
-              bio: data.counselorBio,
-              name: data.counselorName,
-              imageURL: data.counselorImageURL,
-            })
-          })
+        this.setState({
+          bio: data.counselor.counselorBio,
+          name: data.counselor.counselorName,
+          imageURL: data.counselor.counselorImageURL,
         })
       })
-      
     })
-
-
   }
 
   render() {
